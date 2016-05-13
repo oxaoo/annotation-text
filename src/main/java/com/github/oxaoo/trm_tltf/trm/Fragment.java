@@ -18,7 +18,10 @@ public class Fragment {
     private List<String> words;
     private List<Integer> wordsWeight;
     private int globalWeight;
+    private double localWeight;
     private int importance;
+
+    private double assessment;
 
     public Fragment(List<String> words) {
         id = ++count;
@@ -94,6 +97,29 @@ public class Fragment {
         this.globalWeight = globalWeight;
     }
 
+    public double getLocalWeight() {
+        return localWeight;
+    }
+
+    public void setLocalWeight(double localWeight) {
+        this.localWeight = localWeight;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
+    public double getAssessment() {
+        return assessment;
+    }
+
+    public void setAssessment(double assessment) {
+        this.assessment = assessment;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -115,8 +141,8 @@ public class Fragment {
     public String toString() {
         return "Fragment{" +
                 "id=" + id +
-                ", globalWeight=" + globalWeight +
                 ", importance=" + importance +
+                ", assessment=" + assessment +
                 '}';
     }
 }
