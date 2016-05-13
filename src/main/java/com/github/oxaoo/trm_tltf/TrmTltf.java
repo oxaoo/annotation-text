@@ -26,7 +26,7 @@ public class TrmTltf {
      */
     public void annotate(String filename) {
         String text = IOFile.read(filename);
-        List<String> fragments = fragmentation(text);
+        List<String> fragments = fragmentationBySentence(text);
         trm.determinationGlobalProperties(fragments);
     }
 
@@ -36,7 +36,7 @@ public class TrmTltf {
      * @param text input text
      * @return list of sentences
      */
-    private List<String> fragmentation(String text) {
+    private static List<String> fragmentationBySentence(String text) {
         List<String> sentences = new ArrayList<>();
 
         log.debug("List of sentences: ");
@@ -50,5 +50,27 @@ public class TrmTltf {
             log.debug(sentence);
         }
         return sentences;
+    }
+
+    /**
+     * The fragmentation of the sentence.
+     *
+     * @param sentence input sentence
+     * @return list of words
+     */
+    public static List<String> fragmentationByWords(String sentence) {
+        List<String> words = new ArrayList<>();
+
+        log.debug("List of words: ");
+        BreakIterator iterator = BreakIterator.getWordInstance();
+        iterator.setText(sentence);
+        int start = iterator.first();
+        for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
+            String word = sentence.substring(start, end).replaceAll("[^\\w]", "");
+            log.debug(word);
+            if (word.length() > 1) //exclude punctuation and article.
+                words.add(word);
+        }
+        return words;
     }
 }

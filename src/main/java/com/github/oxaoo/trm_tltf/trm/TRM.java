@@ -1,5 +1,6 @@
 package com.github.oxaoo.trm_tltf.trm;
 
+import com.github.oxaoo.trm_tltf.TrmTltf;
 import org.apache.log4j.Logger;
 
 import java.text.BreakIterator;
@@ -27,7 +28,7 @@ public class TRM {
      */
     public void determinationGlobalProperties(List<String> sentences) {
         for (String sentence : sentences) {
-            List<String> words = fragmentationByWords(sentence);
+            List<String> words = TrmTltf.fragmentationByWords(sentence);
             fragments.add(new Fragment(words));
             updateWordsWeight(words);
         }
@@ -48,27 +49,6 @@ public class TRM {
         log.debug("finish");
     }
 
-    /**
-     * The fragmentation of the sentence.
-     *
-     * @param sentence input sentence
-     * @return list of words
-     */
-    private List<String> fragmentationByWords(String sentence) {
-        List<String> words = new ArrayList<>();
-
-        log.debug("List of words: ");
-        BreakIterator iterator = BreakIterator.getWordInstance();
-        iterator.setText(sentence);
-        int start = iterator.first();
-        for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
-            String word = sentence.substring(start, end).replaceAll("[^\\w]", "");
-            log.debug(word);
-            if (word.length() > 1) //exclude punctuation and article.
-                words.add(word);
-        }
-        return words;
-    }
 
 
     //TODO: added search streaming words (cognates and synonyms) !!!
