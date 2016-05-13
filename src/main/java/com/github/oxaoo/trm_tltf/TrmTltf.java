@@ -1,5 +1,6 @@
 package com.github.oxaoo.trm_tltf;
 
+import com.github.oxaoo.trm_tltf.trm.TRM;
 import com.github.oxaoo.util.IOFile;
 import org.apache.log4j.Logger;
 
@@ -10,6 +11,14 @@ import java.util.List;
 public class TrmTltf {
     private final static Logger log = Logger.getLogger(TrmTltf.class.getName());
 
+    private final TRM trm;
+//    private TLTF tltf;
+
+
+    public TrmTltf() {
+        trm = new TRM();
+    }
+
     /**
      * Annotate text.
      *
@@ -18,7 +27,7 @@ public class TrmTltf {
     public void annotate(String filename) {
         String text = IOFile.read(filename);
         List<String> fragments = fragmentation(text);
-
+        trm.determinationGlobalProperties(fragments);
     }
 
     /**
