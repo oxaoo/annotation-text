@@ -1,7 +1,6 @@
 package com.github.oxaoo.trm_tltf.tltf;
 
-import com.github.oxaoo.trm_tltf.TrmTltf;
-import com.github.oxaoo.trm_tltf.trm.Fragment;
+import com.github.oxaoo.trm_tltf.Fragment;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -68,7 +67,8 @@ public class TLTF {
         }*/
 
         //alternative
-        int maxCluster = Collections.max(clusters);
+        int maxCluster = 0;
+        if (!clusters.isEmpty()) maxCluster = Collections.max(clusters);
         return (double) (maxCluster * maxCluster) / (double) numWords;
     }
 }
