@@ -1,0 +1,19 @@
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.received{
+    width: 160px;
+    font-size: 10px;
+}
+
+input[type=text]:focus, textarea:focus{
+    box-shadow: 0 0 5px #4cae4c;
+    border: 1px solid #4cae4c;
+}
+
+.tab-content{
+    padding:5px
+}
