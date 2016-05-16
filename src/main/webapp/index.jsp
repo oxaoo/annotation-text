@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.js"></script>
+
 
     <link rel="stylesheet" type="text/css" href="resources/style.css">
     <script src="resources/script.js"></script>
@@ -48,12 +50,14 @@
         </fieldset>
     </form>
 
-    <div>
+
+    <div id="annotateResult" class="row"></div>
+    <%--<div>
         <fieldset class="form-group">
             <label for="annotatedText">Результат аннотирования:</label>
             <textarea class="form-control" id="annotatedText" rows="10"></textarea>
         </fieldset>
-    </div>
+    </div>--%>
 </div>
 </body>
 </html>

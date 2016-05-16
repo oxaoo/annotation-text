@@ -21,20 +21,59 @@ function annotate() {
 function resultAnnotate(response) {
     console.log("resposne: " + response);
     var map = JSON.parse(response);
-    var annotation = map.annotation;
-    //var status = map.status;
+    //var annotation = map.annotation;
+    var method = map.method;
 
-/*    switch (status) {
-        case 'STATION_ERROR':
-            toastr.error('Проверьте корректность указанных станций');
+    switch (method) {
+        case 'trm':
+            makeTrmModel(map);
+            //toastr.error('Проверьте корректность указанных станций');
             return;
-        case 'DATE_ERROR':
-            toastr.error('Проверьте корректность указанных временных промежутков');
+        case 'srl':
+            makeSrlModel(map);
+            //toastr.error('Проверьте корректность указанных временных промежутков');
             return;
-        case 'ERROR':
-            toastr.error('Не удалось выполнить запрос');
+        default:
+            toastr.error('Не произвести аннотирование текста');
             return;
-    }*/
+    }
 
-    $("#annotatedText").val(annotation);
+    //$("#annotatedText").val(annotation);
+}
+
+function makeTrmModel(map) {
+    var stringList = map.strings;
+
+    var trmTab = '<table width="100%" class="table table-hover"><tr><th>№</th><th>Приоритет</th></tr>';
+    for (var i = 0; i < stringList.length; i++) {
+        trmTab += '<tr><td>' + (i + 1) + '</td><td>' + stringList[i] + '</td></tr>';
+    }
+    trmTab += '</table>';
+
+    $('#annotateResult').empty();
+    $('#annotateResult').append(trmTab);
+}
+
+function makeSrlModel(map) {
+    var wordList = map.words;
+    var predicateList = map.predicates;
+
+    var srlWordTab = '<p>Слова</p><table width="100%" class="table table-hover"><tr><th>№</th><th>Форма</th><th>Лемма</th><th>Роль</th></tr>';
+    for (var i = 0; i < wordList.length; i++) {
+        srlWordTab += '<tr><td>' + (i + 1) + '</td><td>' + wordList[i] + '</td><td>' + wordList[i] + '</td><td>' + wordList[i] + '</td></tr>';
+    }
+    srlWordTab += '</table>';
+
+    $('#annotateResult').empty();
+    $('#annotateResult').append(srlWordTab);
+
+
+
+    var srlPredicateTab = '<br><p>Предикаты</p><table width="100%" class="table table-hover"><tr><th>№</th><th>Форма</th><th>Смысл</th><th>Аргумент</th></tr>';
+    for (var i = 0; i < predicateList.length; i++) {
+        srlPredicateTab += '<tr><td>' + (i + 1) + '</td><td>' + srlPredicateTab[i] + '</td><td>' + srlPredicateTab[i] + '</td><td>' + srlPredicateTab[i] + '</td></tr>';
+    }
+    srlPredicateTab += '</table>';
+
+    $('#annotateResult').append(srlWordTab);
 }

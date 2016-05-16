@@ -1,87 +1,43 @@
 package com.github.oxaoo.srl;
 
-import se.lth.cs.srl.CompletePipeline;
-import se.lth.cs.srl.corpus.Predicate;
-import se.lth.cs.srl.corpus.Sentence;
-import se.lth.cs.srl.corpus.Word;
-import se.lth.cs.srl.options.CompletePipelineCMDLineOptions;
-import se.lth.cs.srl.options.FullPipelineOptions;
+import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.zip.ZipException;
-
+import java.util.List;
 
 public class Main {
-    private static String[] pipelineOptions = new String[]{
-            "eng",                                        // language
-            "-lemma", "src/main/resources/models/small/lemma-small-eng.model",            // lemmatization mdoel
-            "-tagger", "src/main/resources/models/small/tagger-small-eng.model",        // tagger model
-            "-parser", "src/main/resources/models/small/parse-small-eng.model",        // parsing model
-            "-srl", "src/main/resources/models/srl-eng.model",    // SRL model
-            "-tokenize",                                // turn on word tokenization
-            "-reranker"                                    // turn on reranking (part of SRL)
-    };
+    private final static Logger log = Logger.getLogger(Main.class.getName());
 
-    /*private static String[] pipelineOptions = new String[]{
-            "eng",                                        // language
-            "-lemma", "src/main/resources/models/lemma-small-eng.model",            // lemmatization mdoel
-            "-tagger", "src/main/resources/models/tagger-small-eng.model",        // tagger model
-            "-parser", "src/main/resources/models/parse-small-eng.model",        // parsing model
-            "-srl", "src/main/resources/models/srl-eng.model",    // SRL model
-            "-tokenize",                                // turn on word tokenization
-            "-reranker"                                    // turn on reranking (part of SRL)
-    };*/
+    public static void main(String[] args) {
+/*
+        String text = "Understanding the basic stages of search" +
+                "If we could travel back in time (let’s say to 1998), what would be the basic stages of work we would need to perform to build a search engine? " +
+                "These stages are the same today as they were in 1998 but we have improved their effectiveness and computational performance. " +
+                "The basic stages in conventional searching: crawling, parsing, analyzing and indexing. " +
+                "Crawling refers to the process of gathering the documents on which we want to enable the search functionality. It may not be necessary if the documents exist or have been collected already. Parsing is necessary for transforming the documents (XML, HTML, Word, PDF) into a common structure that will represent the fields of indexing in a purely textual form. " +
+                "An overview of crawler components " +
+                "Web crawlers are used to discover, download, and store content from the Web. " +
+                " Web crawler is just a part of a larger application such as a search engine. " +
+                " A typical web crawler has the following components: a repository module to keep track of all URLs known to the crawler; a document download module that retrieves documents from the Web using provided set of URLs; a repository module that stores retrieved document metadata and content extracted from the raw documents during the crawling process. " +
+                "Design and implementation of individual components depend on what you’re planning to crawl and the scale that the crawler is required to handle. " +
+                "For intranet websites, you can get away with a fairly simple implementation as well. These nodes can even be geographically distributed to be closer to the source of data. ";
+*/
 
-
-    public static void main(String[] args) throws Exception {
         String text = "Zenit held talks with representatives of the former Chelsea coach Jose Mourinho in London.";
-        Main demo = new Main(pipelineOptions); // replace with "args" if options from command line are to be used
 
-        demo.parse(text);
-    }
+        Srl srl = new Srl();
+        srl.annotate(text);
+        List<SrlWord> srlWords = srl.getSrlWords();
+        List<SrlPredicate> srlPredicates = srl.getSrlPredicates();
 
-    CompletePipeline pipeline;
 
-    public Main(String[] commandlineoptions) throws ZipException, ClassNotFoundException, IOException {
-        FullPipelineOptions options = new CompletePipelineCMDLineOptions();
-        options.parseCmdLineArgs(commandlineoptions); // process options
-        pipeline = CompletePipeline.getCompletePipeline(options); // initialize pipeline
-    }
-
-    public void parse(String text) throws Exception {
-        String[] tokens = pipeline.pp.tokenize(text); // this is how you tokenize your text
-        Sentence s = pipeline.parse(Arrays.asList(tokens)); // this is how you then process the text (tokens)
-
-        System.out.println();
-
-        // a sentence is just a list of words
-        int size = s.size();
-        for (int i = 1; i < size; i++) {
-            Word w = s.get(i); // skip word number 0 (ROOT token)
-            // each word object contains information about a word's actual word form / lemma / POS
-            System.out.println(w.getForm() + "\t " + w.getLemma() + "\t" + w.getPOS());
+        log.info("Foreach words:");
+        for(SrlWord word : srlWords) {
+            log.info(word.toString());
         }
 
-        System.out.println();
-
-        // some words in a sentence are recognized as predicates
-        for (Predicate p : s.getPredicates()) {
-            // every predicate has a sense that defines its semantic frame
-            System.out.println(p.getForm() + " (" + p.getSense() + ")");
-            // show arguments from the semantic frame that are instantiated in a sentence
-            for (Word arg : p.getArgMap().keySet()) {
-                System.out.print("\t" + p.getArgMap().get(arg) + ":");
-                // "arg" is just the syntactic head word; let's iterate through all words in the argument span
-                for (Word w : arg.getSpan())
-                    System.out.print(" " + w.getForm());
-                System.out.println();
-            }
-
-            System.out.println();
-
+        log.info("Foreach predicates:");
+        for(SrlPredicate predicate : srlPredicates) {
+            log.info(predicate.toString());
         }
-
     }
 }
-

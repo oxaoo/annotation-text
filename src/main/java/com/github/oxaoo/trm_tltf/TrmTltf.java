@@ -6,10 +6,7 @@ import com.github.oxaoo.util.IOFile;
 import org.apache.log4j.Logger;
 
 import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TrmTltf {
     private final static Logger log = Logger.getLogger(TrmTltf.class.getName());
@@ -31,8 +28,17 @@ public class TrmTltf {
      *
      * @param filename name of text file
      */
-    public void annotate(String filename) {
+    public void annotateFile(String filename) {
         String text = IOFile.read(filename);
+        annotate(text);
+    }
+
+    /**
+     * Annotate text.
+     *
+     * @param text is annotated text
+     */
+    public List<String> annotate(String text) {
         List<String> sentences = fragmentationBySentence(text);
         List<Fragment> fragments = fragmentation(sentences);
         trm.determinationGlobalProperties(fragments);
@@ -53,8 +59,25 @@ public class TrmTltf {
             }
         }
 
+
+        Collections.sort(fragments, new Comparator<Fragment>() {
+            @Override
+            public int compare(Fragment f1, Fragment f2) {
+                return -1 * Double.compare(f1.getAssessment(), f2.getAssessment());
+            }
+        });
+
 //        log.info("Most important fragment:\n" + fragments.get(idFragment - 1).getWords().toString());
         log.info("Most important fragment:\n" + sentences.get(idFragment - 1));
+
+        List<String> annotationText = new ArrayList<>(fragments.size());
+        log.info("A priority: ");
+        for(Fragment fragment : fragments) {
+            log.info(fragment.toString());
+            annotationText.add(fragment.getSentence());
+        }
+
+        return annotationText;
     }
 
 
@@ -96,7 +119,7 @@ public class TrmTltf {
 
         for (String sentence : sentences) {
             List<String> words = fragmentationByWords(sentence);
-            fragments.add(new Fragment(words));
+            fragments.add(new Fragment(words, sentence));
             updateWordsWeight(words);
         }
 

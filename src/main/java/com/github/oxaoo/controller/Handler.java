@@ -17,18 +17,17 @@ import java.util.TreeMap;
 public class Handler extends HttpServlet {
     private final static Logger log = Logger.getLogger(Handler.class.getName());
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String text = req.getParameter("text");
-        String method = req.getParameter("method");
+        String method = req.getParameter("method").toLowerCase();
         log.info("Request content, text: " + text + ", method: " + method);
 
-        String annotation = ServiceAnnotation.execute(text, method);
+        String jresponse = ServiceAnnotation.execute(text, method);
 
-        Map<String, Object> response = new TreeMap<String, Object>();
-        response.put("annotation", annotation);
-        String jresponse = new Gson().toJson(response);
+//        Map<String, Object> response = new TreeMap<String, Object>();
+//        response.put("annotation", annotation);
+//        String jresponse = new Gson().toJson(response);
 
         log.info("Send response: " + jresponse);
 

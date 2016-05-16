@@ -21,12 +21,21 @@ public class Fragment {
     private double localWeight;
     private int importance;
 
+    private String sentence;
+
     private double assessment;
 
     public Fragment(List<String> words) {
         id = ++count;
         globalWeight = 0;
         this.words = words;
+    }
+
+    public Fragment(List<String> words, String sentence) {
+        id = ++count;
+        globalWeight = 0;
+        this.words = words;
+        this.sentence = sentence;
     }
 
     public void calcWeight(Map<String, Integer> globalWordsWeight) {
@@ -121,6 +130,14 @@ public class Fragment {
         this.assessment = assessment;
     }
 
+    public String getSentence() {
+        return sentence;
+    }
+
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -137,12 +154,22 @@ public class Fragment {
         return id;
     }
 
+    /*@Override
+    public String toString() {
+        return "Fragment{" +
+                "id=" + id +
+                ", importance=" + importance +
+                ", assessment=" + assessment +
+                '}';
+    }*/
+
     @Override
     public String toString() {
         return "Fragment{" +
                 "id=" + id +
                 ", importance=" + importance +
                 ", assessment=" + assessment +
+                ", sentence='" + sentence + '\'' +
                 '}';
     }
 }
